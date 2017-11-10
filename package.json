@@ -1,0 +1,60 @@
+{
+	"name": "psu-twittersentiment",
+	"version": "0.0.1",
+	"description": "Uses tweets about PSU to determine popular topics and the general opinion (sentiment) regarding them",
+	"license": "MIT",
+	"scripts": {
+		"start": "node dist/app.js",
+		"test": ""
+	},
+	"contributors": [
+		{
+			"name": "Alex Kiefer",
+			"email": "akiefer6@gmail.com",
+			"url": "https://github.com/alkief"
+		},
+		{
+			"name": "",
+			"email": "",
+			"url": ""
+		},
+		{
+			"name": "",
+			"email": "",
+			"url": ""
+		},
+		{
+			"name": "",
+			"email": "",
+			"url": ""
+		},
+		{
+			"name": "",
+			"email": "",
+			"url": ""
+		}
+	],
+	"dependencies": {
+		"dotenv": "^4.0.0",
+		"express": "^4.16.2",
+		"path": "^0.12.7",
+		"twitter": "^1.7.1"
+	},
+	"devDependencies": {
+		"babelify": "^8.0.0",
+		"browserify": "^14.5.0",
+		"babel-core": "^6.26.0",
+		"babel-polyfill": "^6.26.0",
+		"babel-preset-env": "^1.6.1",
+		"del": "^3.0.0",
+		"event-stream": "^3.3.4",
+		"gulp": "^3.9.1",
+		"gulp-babel": "^7.0.0",
+		"gulp-concat": "^2.6.1",
+		"gulp-flatten": "^0.3.1",
+		"gulp-sourcemaps": "^2.6.1",
+		"run-sequence": "^2.2.0",
+		"vinyl-buffer": "^1.0.0",
+		"vinyl-source-stream": "^1.1.0"
+	}
+}
