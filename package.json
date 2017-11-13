@@ -4,7 +4,7 @@
 	"description": "Uses tweets about PSU to determine popular topics and the general opinion (sentiment) regarding them",
 	"license": "MIT",
 	"scripts": {
-		"start": "node dist/app.js",
+		"start": "node dist/server/app.js",
 		"test": ""
 	},
 	"contributors": [
@@ -38,7 +38,8 @@
 		"dotenv": "^4.0.0",
 		"express": "^4.16.2",
 		"path": "^0.12.7",
-		"twitter": "^1.7.1"
+		"twitter": "^1.7.1",
+		"watson-developer-cloud": "^2.42.0"
 	},
 	"devDependencies": {
 		"babelify": "^8.0.0",

@@ -33,7 +33,7 @@ gulp.task('server-main', done => {
 	return gulp
 		.src(server)
 		.pipe(babel())
-		.pipe(gulp.dest('dist/'))
+		.pipe(gulp.dest('dist/server'))
 })
 
 gulp.task('server-static', done => {
