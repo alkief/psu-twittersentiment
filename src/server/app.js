@@ -41,7 +41,12 @@ app.get('/data/batch', (req, res) => {
 // Look at the environment variable for the listed variables or set to 8080
 let port = process.env.PORT || process.env.VCAP_APP_PORT || 8080
 
-// Listen on the given port
-app.listen(port, () => {
-  console.log('Server running on port: %d', port)
-})
+// Don't listen automatically if we're testing
+if (process.env.NODE_ENV !== 'test') {
+	// Listen on the given port
+	app.listen(port, () => {
+	  console.log('Server running on port: %d', port)
+	})
+}
+
+export default app

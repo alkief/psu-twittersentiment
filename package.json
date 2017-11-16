@@ -4,8 +4,8 @@
 	"description": "Uses tweets about PSU to determine popular topics and the general opinion (sentiment) regarding them",
 	"license": "MIT",
 	"scripts": {
-		"start": "node dist/server/app.js",
-		"test": ""
+		"start": "gulp && node dist/server/app.js",
+		"test": "gulp && mocha"
 	},
 	"contributors": [
 		{
