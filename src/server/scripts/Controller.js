@@ -23,7 +23,7 @@ export default class Controller {
 		let _this = this
 
 		// Get the results for the startup searches defined in Const
-		this.twitterMessenger.defaultSearch()
+		this.twitterMessenger.searchSet(Const.initialSearchParameterSet)
 			// Forward tweet data to processing logic
 			.then(searchResults => {
 				_this.processBatch(searchResults)

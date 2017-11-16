@@ -8,27 +8,13 @@ export default class TwitterMessenger {
 		// Load credentials for accessing Twitter API and initialize a client
 		// Credentials can be loaded from the project .env file
 		this.client = new twitter({
-			consumer_key: process.env.CONSUMER_KEY,
-			consumer_secret: process.env.CONSUMER_SECRET,
-			access_token_key: process.env.ACCESS_TOKEN_KEY,
-			access_token_secret: process.env.ACCESS_TOKEN_SECRET			
+			consumer_key: process.env.TWITTER_CONSUMER_KEY,
+			consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+			access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+			access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET			
 		})
 	}
 
-	// Send a set of queries using parameters defined in Const
-	// Returns the results of all default searches
-	defaultSearch () {
-		return new Promise ((resolve, reject) => {
-			this.searchSet(initialSearchParameterSet)
-				.then(searchResults => {
-					resolve(searchResults)
-				})
-				.catch(reason => {
-					console.log('Default search failed: ')
-					console.log(reason)
-				})
-		})
-	}
 	
 	/**
 	* Use an array of search parameter configurations to query the Twitter API
