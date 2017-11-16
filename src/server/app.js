@@ -23,11 +23,11 @@ let controller = new Controller()
 const app = express()
 
 // Look at this directory for '/' paths e.g. localhost:8080/index.html
-app.use(express.static(path.join(__dirname, 'server/static'))) 
+app.use(express.static(path.join(__dirname, '../client/static'))) 
 // Look at this directory for '/css' paths
-app.use('/css', express.static(path.join(__dirname, 'server/static'))) 
+app.use('/css', express.static(path.join(__dirname, '../client/static'))) 
 // Look at this directory for '/js' paths
-app.use('/js', express.static(path.join(__dirname, 'client/js'))) 
+app.use('/js', express.static(path.join(__dirname, '../client/js'))) 
 
 app.use(bodyParser.json()) // Parse request payloads as JSON
 

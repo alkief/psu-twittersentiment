@@ -25,7 +25,7 @@ gulp.task('clean-cli', () => {
 })
 
 gulp.task('build-server', done => {
-	runSequence('clean-server', 'server-main', 'server-static', 'server-scripts', done)
+	runSequence('clean-server', 'server-main', 'server-scripts', done)
 })
 
 gulp.task('server-main', done => {
@@ -34,14 +34,6 @@ gulp.task('server-main', done => {
 		.src(server)
 		.pipe(babel())
 		.pipe(gulp.dest('dist/server'))
-})
-
-gulp.task('server-static', done => {
-	const src = 'src/server/static'
-	return gulp
-		.src(`${src}/**/*`, {base: src})
-		.pipe(flatten())
-		.pipe(gulp.dest('dist/server/static'))
 })
 
 gulp.task('server-scripts', done => {
@@ -56,7 +48,7 @@ gulp.task('server-scripts', done => {
 })
 
 gulp.task('build-cli', () => {
-	runSequence('clean-cli', 'cli-scripts')
+	runSequence('clean-cli', 'cli-scripts', 'cli-static')
 })
 
 gulp.task('cli-scripts', done => {
@@ -76,6 +68,14 @@ gulp.task('cli-scripts', done => {
 		.pipe(sourcemaps.write('./'))
 		.pipe(flatten())
 		.pipe(gulp.dest('dist/client/js'))
+})
+
+gulp.task('cli-static', done => {
+	const src = 'src/client/static'
+	return gulp
+		.src(`${src}/**/*`, {base: src})
+		.pipe(flatten())
+		.pipe(gulp.dest('dist/client/static'))
 })
 
 gulp.task('watch', [''])
