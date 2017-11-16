@@ -11,10 +11,9 @@ Requirements before running:
 * Create a `.env` file at the project root 
 * Add Twitter API credentials to the `.env` file  
   *These can be obtained by signing up for Twitter's API and creating a project*  
-  * CONSUMER_KEY = `<your Twitter consumer key>`
-  * CONSUMER_SECRET = `<your Twitter consumer secret>`
-  * ACCESS_TOKEN_KEY = `<your Twitter access key>`
-  * ACCESS_TOKEN_SECRET = `<your Twitter access secret>`   
+  * TWITTER_CONSUMER_KEY = `<your Twitter consumer key>`
+  * TWITTER_CONSUMER_SECRET = `<your Twitter consumer secret>`
+  * TWITTER_ACCESS_TOKEN_KEY = `<your Twitter access key>`
 * Add Watson Natural Language Understanding credentials to the `.env` file  
   *These can be obtained by creating a Watson NLU workspace*
   * WATSON_NLU_USERNAME = `<your Watson NLU workspace username>`
