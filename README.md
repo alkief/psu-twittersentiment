@@ -14,6 +14,7 @@ Requirements before running:
   * TWITTER_CONSUMER_KEY = `<your Twitter consumer key>`
   * TWITTER_CONSUMER_SECRET = `<your Twitter consumer secret>`
   * TWITTER_ACCESS_TOKEN_KEY = `<your Twitter access key>`
+  * TWITTER_ACCESS_TOKEN_SECRET = `<your Twitter access secret`
 * Add Watson Natural Language Understanding credentials to the `.env` file  
   *These can be obtained by creating a Watson NLU workspace*
   * WATSON_NLU_USERNAME = `<your Watson NLU workspace username>`
