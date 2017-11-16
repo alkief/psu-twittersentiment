@@ -1,4 +1,9 @@
-// Utilities for 
+'use strict'
+
+// const stemmer = require('stemmer')
+import stopWordList from './Const'
+
+// This file contains utilities for parsing JSON and text bodies
 
 // Takes links out of a given string
 // NOTE: Assumes one link per tweet currently
@@ -79,4 +84,43 @@ export function formatTwitterSearchResponse (response) {
 	})
 
 	return statuses
+}
+
+// Organize a set of tweet JSON objects into a processed corpus of text ready to be fed to Watson
+//TODO pull text from all relevant tweet fields, run through processing functions
+//TODO decide structure of preprocessed data
+export function preprocessTweets (tweetData) {
+
+}
+
+// Spellcheck on targeted 'problem' words and things like '<3'
+function correctInternetGrammar (text) {
+	return text
+}
+
+// Change emoticon characters into representative words
+function translateEmoticons (text) {
+	return text
+}
+
+// Expand any commonly used acronyms (afaik, lol, etc)
+function expandAcronyms (text) {
+	return text
+}
+
+// Remove words that have no meaning or context associated with them inherently
+// Ex: 'a', 'of', 'the', etc.
+function removeStopWords (text) {
+	// Remove a word if it's contained in the stop word list defined in Const
+	text = text.filter(word => {
+		if (!stopWordList.includes(word)) return word
+	})
+
+	return text
+}
+
+// Convert words such as 'talking' to their root word 'talk'
+// Uses 'stemmer' package
+function stem (text) {
+	return text
 }
