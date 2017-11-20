@@ -1,11 +1,10 @@
 import Controller from '../../../dist/server/scripts/Controller'
+import * as Parsing from '../../../dist/server/scripts/Parsing'
 
-describe('Controller.js', () => {
+describe.skip('Controller.js', () => {
+	let controller = new Controller()
+
 	describe('startup', () => {
-		it('should produce base topic analysis within 5s', () => {
-
-		})
-
 		it('should store topic analysis results in cache', () => {
 
 		})
@@ -20,12 +19,21 @@ describe('Controller.js', () => {
 	})
 
 	describe('processBatch', () => {
-		it('should accept unformatted Twitter \'search/tweets\' responses', () => {
+		it('should handle unformatted Twitter \'search/tweets\' responses', () => {
+			let rawTweets = fs.readFileSync(path.resolve(__dirname, '../../data/rawTweets.json'))
+			rawTweets = JSON.parse(rawTweets)
+
+			let formattedTweets = Parsing.formatTweets(rawTweets)
+
+			let processedBatch = controller.processBatch(formatTweets)
+		})
+
+		it('should return a Watson NLU response', () => {
 
 		})
 
-		it('should return a Watson NLU response from tweet data', () => {
-
+		it('should produce topic analysis within 5s', () => {
+			
 		})
 	})
 })

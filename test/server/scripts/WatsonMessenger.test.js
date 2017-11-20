@@ -1,6 +1,6 @@
 import WatsonMessenger from '../../../dist/server/scripts/WatsonMessenger'
 
-describe('WatsonMessenger.js', () => {
+describe.skip('WatsonMessenger.js', () => {
 	describe('constructor', () => {
 		it('should successfully instantiate a Watson NLU client', () => {
 
