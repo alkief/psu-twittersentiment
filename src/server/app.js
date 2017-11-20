@@ -1,5 +1,6 @@
 'use strict'
 require('babel-core').transform('code')
+import "babel-polyfill"
 
 // Load variables from '.env' in the project root
 import dotenv from 'dotenv'
@@ -32,20 +33,19 @@ app.use('/js', express.static(path.join(__dirname, '../client/js')))
 app.use(bodyParser.json()) // Parse request payloads as JSON
 
 
-// Endpoint for retrieving a set of tweets 
+// Respond with JSON representing server-side analysis of the most recent set of tweets
 app.get('/data/batch', (req, res) => {
-
+	res.send('response')
+	res.set("Connection", "close")
 })
 
-
-// Look at the environment variable for the listed variables or set to 8080
 let port = process.env.PORT || process.env.VCAP_APP_PORT || 8080
 
 // Don't listen automatically if we're testing
 if (process.env.NODE_ENV !== 'test') {
 	// Listen on the given port
-	app.listen(port, () => {
-	  console.log('Server running on port: %d', port)
+	app.server = app.listen(port, () => {
+		console.log('app listening on port ' + port)
 	})
 }
 
