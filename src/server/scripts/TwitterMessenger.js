@@ -1,6 +1,8 @@
 import twitter from 'twitter' // Client for talking to the Twitter API 
 import { initialSearchParameterSet } from './Const' // The initial list of searches to send to Twitter
-import { formatTwitterSearchResponse } from './Parsing'
+import { formatTweets } from './Parsing'
+
+import fs from 'fs'
 
 // Exposes methods for creating and sending queries to the Twitter API
 export default class TwitterMessenger {
@@ -21,32 +23,29 @@ export default class TwitterMessenger {
 	* @param {Object} parameterSet - List of parameter configurations. See TwitterMessenger.search() 
 	* @return An array of formatted JSON objects representing Tweets which match the searches 
 	*/
-	searchSet (parameterSet) {
-		return new Promise ((resolve, reject) => {
-			// Get a Promise for the results of each query in the initial set
-			let searchPromises = parameterSet.map(params => {
-				return this.search(params)
-			})
-
-			// When all the searches complete, resolve the aggregated results
-			Promise.all(searchPromises)
-				.then(responseList => {
-					let aggregatedResults = []
-
-					// Extract results from each returned list into aggregated list
-					responseList.forEach(response => {
-						response.forEach(status => {
-							aggregatedResults.push(status)
-						})
-					})
-
-					resolve(aggregatedResults)
-				})
-				.catch(reason => {
-					console.log('Could not successfully search Twitter API with query set')
-					console.log(reason)
-				})
+	async searchSet (parameterSet) {
+		let results = await parameterSet.map(async params => {
+			return await this.search(params)
 		})
+
+		// When all the searches complete, resolve the aggregated results
+		return await Promise.all(results)
+			.then(async responseList => {
+				let aggregatedResults = []
+
+				// Extract results from each returned list into aggregated list
+				responseList.forEach(statusList => {
+					statusList.forEach(status => {
+						aggregatedResults.push(status)
+					})
+				})
+
+				return aggregatedResults
+			})
+			.catch(reason => {
+				console.log('Could not successfully search Twitter API with query set')
+				console.log(reason)
+			})
 	}
 
 
@@ -58,18 +57,9 @@ export default class TwitterMessenger {
 	* @return A formatted list of tweets that match the search configuration
 	* TODO add a 'count' parameter for adjustment based on search priority / importance
 	*/
-	search (params) {
-		return new Promise ((resolve, reject) => {
-			// Search with given parameter configuration
-			this.client.get('search/tweets', params, (error, tweets, response) => {
-				if (error) reject(error)
-				else {
-					// Trim extra properties and unneeded information from JSON
-					tweets = formatTwitterSearchResponse(tweets)
-
-					resolve(tweets)
-				}
-			})
-		})
-	}
+	async search (params) {
+		// Search with given parameter configuration
+		let results = await this.client.get('search/tweets', params)
+		return formatTweets(results.statuses)
+	}	
 }
