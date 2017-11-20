@@ -1,5 +1,6 @@
 import WatsonMessenger from './WatsonMessenger' 
 import TwitterMessenger from './TwitterMessenger'
+import { preprocessTweets } from './Parsing'
 import * as Const from './Const'
 
 // TODO caching module (mongoDB?, Redis?)
@@ -19,51 +20,53 @@ export default class Controller {
 	}
 
 	// Sends startup queries to Twitter and forwards responses to Watson
-	startup () {
+	async startup () {
 		let _this = this
 
 		// Get the results for the startup searches defined in Const
-		this.twitterMessenger.searchSet(Const.initialSearchParameterSet)
-			// Forward tweet data to processing logic
-			.then(searchResults => {
-				_this.processBatch(searchResults)
-			})
-			.catch(reason => {
-				console.log('Controller failed at startup: ')
-				console.log(reason)
-			})
+		let searchResults = await this.twitterMessenger.searchSet(Const.initialSearchParameterSet)
+		console.log('search results in controller startup\n', JSON.stringify(searchResults, null, 2))
+
+
+		let nluResponse = await this.processBatch(searchResults)
+
+		// Show the NLU response we get back
+		console.log('\nnluResponse in startup\n', JSON.stringify(nluResponse, null, 2))
 	}
 
 	/**
 	* Trigger NLU processing and cache update using a list of formatted 
 	* 		Twitter statuses received from search API
-	* @param {Object[]} tweetData - The list of statuses received
+	* @param {String[]} tweetData - The list of statuses received from searching twitter
 	* @return TODO structure data into an ordered list based on topic, sentiment, emotion, date created
 	*/
-	processBatch (tweetData) {
+	async processBatch (tweetList) {
 		let _this = this
 
-		return new Promise ((resolve, reject) => {
+		let preprocessedTweets = preprocessTweets(tweetList)
 
-			console.log('LOGGING TWEET DATA: \n\n')
-			console.log(JSON.stringify(tweetData, null, 2))
+		// Shows the output of preprocessing output from searches
+		// console.log('preprocessedTweets in processBatch\n', preprocessedTweets)
 
-			// Condense the list of tweet strings into one newline-separated string
-			let tweetsTextList = tweetData.reduce((accumulator, curTweet) => {
-				return accumulator.toString() + curTweet.text + '\n'
+		// Reduce the 2d array of strings to one space-delimited string of all words used
+		let textBody = preprocessedTweets.reduce((bodyAccumulator, curTweet) => {
+			let tweetString = curTweet.reduce((tweetAccumulator, word) => {
+				return tweetAccumulator.toString() + word + ' '
 			}, '')
 
-			// Forward text from all statuses to Watson
-			_this.watsonMessenger.nluAnalyzeText(tweetsTextList)
-				// Log the response from Watson (for now)
-				.then(nluResponse => {
-					console.log('LOGGING NLU RESPONSE: \n\n')
-					console.log(JSON.stringify(nluResponse, null, 2))
-				})
-				.catch(reason => {
-					console.log('Controller failed in processBatch: ')
-					console.log(reason)
-				})
-		})
+			return bodyAccumulator.toString() + tweetString + ' '
+		}, '')
+
+		let nluResponse
+
+		// Get the NLU analysis for the given text body
+		try {
+			nluResponse = await this.watsonMessenger.nluAnalyzeText(textBody)
+		} catch (e) {
+			console.log('Error when calling NLU analysis: ', e)
+		}
+
+		// console.log('nluResponse in processBatch', nluResponse)
+		return nluResponse
 	}
 }
