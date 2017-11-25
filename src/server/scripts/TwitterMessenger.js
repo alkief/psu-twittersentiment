@@ -1,6 +1,7 @@
 import twitter from 'twitter' // Client for talking to the Twitter API 
 import { initialSearchParameterSet } from './Const' // The initial list of searches to send to Twitter
 import { formatTweets } from './Parsing'
+import _ from 'lodash'
 
 import fs from 'fs'
 
@@ -47,6 +48,27 @@ export default class TwitterMessenger {
 				console.log(reason)
 			})
 	}
+
+	async getTweets(search, count) {
+
+		let params = {
+            q: search,
+            count: count,
+            since_id: 0
+        }
+
+        let statuses = []
+
+        while (params.count > 0) {
+            let results = await this.client.get('search/tweets', params)
+            params.count -= results.search_metadata.count
+            params.since_id = _.minBy(results.statuses, 'id').id
+            statuses = _.concat(statuses, results.statuses)
+        }
+
+        return statuses.length
+	}
+
 
 
 	/**
