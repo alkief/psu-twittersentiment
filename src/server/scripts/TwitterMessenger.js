@@ -49,6 +49,13 @@ export default class TwitterMessenger {
 			})
 	}
 
+    /**
+	 * Gets tweets using the specified parameters.
+	 *
+     * @param search The text to use as the search query
+     * @param count The number of tweets to retrieve
+     * @returns The retrieved tweets
+     */
 	async getTweets(search, count) {
 
 		let params = {
@@ -66,7 +73,7 @@ export default class TwitterMessenger {
             statuses = _.concat(statuses, results.statuses)
         }
 
-        return statuses.length
+        return statuses
 	}
 
 
