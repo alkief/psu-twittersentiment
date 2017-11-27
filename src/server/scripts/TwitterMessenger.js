@@ -56,21 +56,28 @@ export default class TwitterMessenger {
      * @param count The number of tweets to retrieve
      * @returns The retrieved tweets
      */
-	async getTweets(search, count) {
-
-		let params = {
-            q: search,
-            count: count,
-            since_id: 0
-        }
+	async getTweets(searches, count) {
 
         let statuses = []
 
-        while (params.count > 0) {
-            let results = await this.client.get('search/tweets', params)
-            params.count -= results.search_metadata.count
-            params.since_id = _.minBy(results.statuses, 'id').id
-            statuses = _.concat(statuses, results.statuses)
+		if (!Array.isArray(searches)) {
+        	searches = [searches]
+		}
+
+		for (let search in searches) {
+            let params = {
+                q: search,
+                count: count,
+				lang: 'en',
+                since_id: 0
+            }
+
+            while (params.count > 0) {
+                let results = await this.client.get('search/tweets', params)
+                params.count -= results.search_metadata.count
+                params.since_id = _.minBy(results.statuses, 'id').id
+                statuses = _.concat(statuses, results.statuses)
+            }
         }
 
         return statuses
