@@ -15,7 +15,8 @@ export default class WatsonMessenger {
 	/**
 	* Use the Watson Natural Language Understanding service with defined feature parameters on the given text
 	* For NLU Client request parameters: https://www.ibm.com/watson/developercloud/natural-language-understanding/api/v1/?node#methods
-	* @param {String} text - The body of text to analyze. 
+	* @param {String} text - The body of text to analyze.
+	* @param {String} text - The body of text to analyze.
 	* @return Promise which resolves the JSON response from Watson NLU
 	*/
 	// NOTE text variable can be an individual tweet's contents or an aggregated set of tweets 
@@ -24,20 +25,14 @@ export default class WatsonMessenger {
 			'text': text,
 			'features': {
 				'entities': {
-					'emotion': true,
 					'sentiment': true,
-					'limit': 1
+                    'emotion': true,
+					'limit': 50
 				},
 				'keywords': {
 					'sentiment': true,
 					'emotion': true,
-					'limit': 3
-				},
-				'concepts': {
-					'limit': 2
-				},
-				'sentiment': {
-					'targets': ['psu', 'penn state', 'penn state university']
+					'limit': 50
 				}
 			}
 		}
