@@ -63,7 +63,7 @@ export default class TwitterMessenger {
 
 		for (let search of searches) {
 			let params = {
-				q: search,
+				q: search + " Exclude:retweets",
 				count: count,
 				lang: 'en',
 				since_id: 0
