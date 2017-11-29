@@ -10,7 +10,6 @@ dotenv.config({silent: true})
 import express from 'express' // Lightweight framework for handling requests, routing
 import path from 'path' // Resolves relative pathing issues
 import bodyParser from 'body-parser' // Utility for parsing request bodies
-import fs from 'fs' // Allows file system I/O
 
 import Controller from './scripts/Controller'
 import TwitterMessenger from "./scripts/TwitterMessenger";
@@ -46,7 +45,11 @@ app.get('/data/batch', (req, res) => {
 
 app.get('/api/sentiment', (req, res) => {
 	twitter.getTweets(['PSU', 'Penn State', 'Penn State University'], 30).then((tweets) => {
-		let tweetText = _.map(tweets, 'text').join('\n')
+		tweets = _.map(tweets, 'text')
+
+		tweets = _.uniq(tweets)
+
+		let tweetText = tweets.join('\n')
 
 		watson.nluAnalyzeText(tweetText).then((ret) => {
 
@@ -76,7 +79,7 @@ app.get('/api/sentiment', (req, res) => {
 			let result = _.concat(keywords, entities)
 
 			let sentimentPayload = {
-				tweets: _.map(tweets, 'text'),
+				tweets: tweets,
 				keywords: result
 			}
 
