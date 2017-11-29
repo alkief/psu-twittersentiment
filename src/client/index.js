@@ -1,3 +1,6 @@
+import View from './js/View'
+
 $(document).ready(() => {
-	console.log('hi')
+	let v = new View()
+
 })
