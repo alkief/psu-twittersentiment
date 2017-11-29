@@ -1,9 +1,5 @@
-import twitter from 'twitter' // Client for talking to the Twitter API 
-import { initialSearchParameterSet } from './Const' // The initial list of searches to send to Twitter
-import { formatTweets } from './Parsing'
+import twitter from 'twitter' // Client for talking to the Twitter API
 import _ from 'lodash'
-
-import fs from 'fs'
 
 // Exposes methods for creating and sending queries to the Twitter API
 export default class TwitterMessenger {
@@ -81,7 +77,7 @@ export default class TwitterMessenger {
 			}
 		}
 
-		return _.uniq(statuses)
+		return statuses
 	}
 
 	/**
