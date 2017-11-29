@@ -60,7 +60,7 @@ gulp.task('cli-scripts', done => {
 		})
 		.transform(babelify)
 		.bundle()
-		.pipe(source(entry))
+		.pipe(source('index.js'))
 		.pipe(buffer())
 		.pipe(sourcemaps.init({
 			loadMaps: true

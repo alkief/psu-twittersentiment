@@ -45,40 +45,44 @@ app.get('/data/batch', (req, res) => {
 })
 
 app.get('/api/sentiment', (req, res) => {
-    twitter.getTweets(['PSU', 'Penn State', 'Penn State University'], 500).then((tweets) => {
+  twitter.getTweets(['PSU', 'Penn State', 'Penn State University'], 30).then((tweets) => {
+    let tweetText = _.map(tweets, 'text').join('\n')
 
-        let tweetText = _.map(tweets, 'text').join('\n')
+    watson.nluAnalyzeText(tweetText).then((ret) => {
 
-        watson.nluAnalyzeText(tweetText).then((ret) => {
+      function transform(data) {
+        return {
+          text: data.text,
+          sentiment: data.sentiment.score,
+          sadness: data.emotion.sadness,
+          joy: data.emotion.joy,
+          fear: data.emotion.fear,
+          disgust: data.emotion.disgust,
+          anger: data.emotion.anger
+        }
+      }
 
-            function transform(data) {
-                return {
-                    text: data.text,
-                    sentiment: data.sentiment.score,
-                    sadness: data.emotion.sadness,
-                    joy: data.emotion.joy,
-                    fear: data.emotion.fear,
-                    disgust: data.emotion.disgust,
-                    anger: data.emotion.anger
-                }
-            }
+      let keywords = _.filter(ret.keywords, (o) => {
+        return o.emotion && o.relevance >= 0.5
+      })
 
-            let keywords = _.filter(ret.keywords, (o) => {
-                return o.emotion && o.relevance >= 0.5
-            })
+      let entities = _.filter(ret.entities, (o) => {
+        return o.emotion && o.relevance >= 0.5
+      })
 
-            let entities = _.filter(ret.entities, (o) => {
-                return o.emotion && o.relevance >= 0.5
-            })
+      keywords = _.map(keywords, transform)
+      entities = _.map(entities, transform)
 
-            keywords = _.map(keywords, transform)
-            entities = _.map(entities, transform)
+      let result = _.concat(keywords, entities)
 
-            let result = _.concat(keywords, entities)
+      let sentimentPayload = {
+        tweets: _.map(tweets, 'text'),
+        keywords: result
+      }
 
-            res.send(JSON.stringify(result))
-        })
+      res.send(JSON.stringify(sentimentPayload))
     })
+  })
 })
 
 let port = process.env.PORT || process.env.VCAP_APP_PORT || 8080

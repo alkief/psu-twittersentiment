@@ -2,6 +2,7 @@ import WatsonMessenger from './WatsonMessenger'
 import TwitterMessenger from './TwitterMessenger'
 import { preprocessTweets } from './Parsing'
 import * as Const from './Const'
+import _ from 'lodash'
 
 // TODO caching module (mongoDB?, Redis?)
 
@@ -15,6 +16,8 @@ export default class Controller {
 		this.watsonMessenger = new WatsonMessenger() // Interface for calls to Watson services
 		this.twitterMessenger = new TwitterMessenger() // Interface for calls to Twitter API
 
+		this.sortMode = Const.SORTYBY_RELEVANCE
+
 		// Run startup queries after 1 second
 		setTimeout(_this.startup.bind(_this), 1000)
 	}
@@ -24,14 +27,12 @@ export default class Controller {
 		let _this = this
 
 		// Get the results for the startup searches defined in Const
-		let searchResults = await this.twitterMessenger.searchSet(Const.initialSearchParameterSet)
-		console.log('search results in controller startup\n', JSON.stringify(searchResults, null, 2))
+		// let searchResults = await this.twitterMessenger.searchSet(Const.initialSearchParameterSet)
 
-
-		let nluResponse = await this.processBatch(searchResults)
+		// let nluResponse = await this.processBatch(searchResults)
 
 		// Show the NLU response we get back
-		console.log('\nnluResponse in startup\n', JSON.stringify(nluResponse, null, 2))
+		// console.log('\nnluResponse in startup\n', JSON.stringify(nluResponse, null, 2))
 	}
 
 	/**
@@ -40,7 +41,7 @@ export default class Controller {
 	* @param {String[]} tweetData - The list of statuses received from searching twitter
 	* @return TODO structure data into an ordered list based on topic, sentiment, emotion, date created
 	*/
-	async processBatch (tweetList) {
+	async processBatch (tweetList, scheduleFutureUpdate) {
 		let _this = this
 
 		let preprocessedTweets = preprocessTweets(tweetList)

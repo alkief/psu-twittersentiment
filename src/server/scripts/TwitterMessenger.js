@@ -16,6 +16,7 @@ export default class TwitterMessenger {
 			access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
 			access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET			
 		})
+
 	}
 
 	
@@ -49,41 +50,39 @@ export default class TwitterMessenger {
 			})
 	}
 
-    /**
-	 * Gets tweets using the specified parameters.
-	 *
-     * @param search The text to use as the search query
-     * @param count The number of tweets to retrieve
-     * @returns The retrieved tweets
-     */
+  /**
+	* Gets tweets using the specified parameters.
+	*
+  * @param search The text to use as the search query
+  * @param count The number of tweets to retrieve
+  * @returns The retrieved tweets
+  */
 	async getTweets(searches, count) {
 
-        let statuses = []
+    let statuses = []
 
 		if (!Array.isArray(searches)) {
-        	searches = [searches]
+    	searches = [searches]
 		}
 
-		for (let search in searches) {
-            let params = {
-                q: search,
-                count: count,
+		for (let search of searches) {
+      let params = {
+        q: search,
+        count: count,
 				lang: 'en',
-                since_id: 0
-            }
+        since_id: 0
+      }
 
-            while (params.count > 0) {
-                let results = await this.client.get('search/tweets', params)
-                params.count -= results.search_metadata.count
-                params.since_id = _.minBy(results.statuses, 'id').id
-                statuses = _.concat(statuses, results.statuses)
-            }
-        }
+      while (params.count > 0) {
+	      let results = await this.client.get('search/tweets', params)
+	      params.count -= results.search_metadata.count
+	      params.since_id = _.minBy(results.statuses, 'id').id
+	      statuses = _.concat(statuses, results.statuses)
+      }
+    }
 
-        return statuses
+  	return statuses
 	}
-
-
 
 	/**
 	* Hit the Twitter search API with the given parameters

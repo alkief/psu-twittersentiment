@@ -1,5 +1,13 @@
 // Definition of shared constants
 
+export const SORTBY_RELEVANCE = 0
+export const SORTBY_SENTIMENT = 1
+export const SORTYBY_ANGER = 2
+export const SORTYBY_SADNESS = 3
+export const SORTYBY_JOY = 4
+export const SORTYBY_FEAR = 5
+export const SORTYBY_DISGUST = 6
+
 // A list of parameter objects to send to Twitter at startup
 export const initialSearchParameterSet = [
 	{
