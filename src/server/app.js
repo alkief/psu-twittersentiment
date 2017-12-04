@@ -17,7 +17,7 @@ import WatsonMessenger from "./scripts/WatsonMessenger"; // The main application
 
 
 // Instantiate the application controller
-// NOTE test / developmental methods are called in submodule constructors from the 
+// NOTE test / developmental methods are called in submodule constructors from the
 // 		creation of this object
 let controller = new Controller()
 
@@ -28,20 +28,13 @@ let watson = new WatsonMessenger()
 const app = express()
 
 // Look at this directory for '/' paths e.g. localhost:8080/index.html
-app.use(express.static(path.join(__dirname, '../client/static'))) 
+app.use(express.static(path.join(__dirname, '../client/static')))
 // Look at this directory for '/css' paths
 app.use('/css', express.static(path.join(__dirname, '../client/static')))
 // Look at this directory for '/js' paths
-app.use('/js', express.static(path.join(__dirname, '../client/js'))) 
+app.use('/js', express.static(path.join(__dirname, '../client/js')))
 
 app.use(bodyParser.json()) // Parse request payloads as JSON
-
-
-// Respond with JSON representing server-side analysis of the most recent set of tweets
-app.get('/data/batch', (req, res) => {
-		res.send('response')
-		res.set("Connection", "close")
-})
 
 app.get('/api/sentiment', (req, res) => {
 	twitter.getTweets(['PSU', 'Penn State', 'Penn State University'], 30).then((tweets) => {
