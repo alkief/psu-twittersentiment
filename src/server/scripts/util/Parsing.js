@@ -29,6 +29,8 @@ export function formatTweets (statuses) {
 */
 // TODO consider string version of special characters (eg. '&amp;')
 export function preprocessTweets (tweetList) {
+	//console.log(tweetList)
+
 	// Split into a 2d array corresponding to tweet and word in each tweet
 	let tokenizedTweets = tokenize(tweetList)
 
@@ -41,16 +43,16 @@ export function preprocessTweets (tweetList) {
 		tweet = translateEmojis(tweet)
 		// console.log('tweet after translateEmojis', tweet)
 
-		tweet = expandAcronyms(tweet)
+		//tweet = expandAcronyms(tweet)
 		// console.log('tweet after expandAcronyms', tweet)
 
-		tweet = removeStopWords(tweet)
+		//tweet = removeStopWords(tweet)
 		// console.log('tweet after removeStopWords', tweet)
 
 		tweet = removePunctuation(tweet)
 		// console.log('tweet after removePunctuation', tweet)
 
-		return tweet
+		return tweet.join(' ')
 	})
 
 	return tokenizedTweets
@@ -207,7 +209,7 @@ export function removeStopWords (tweet) {
 export function removePunctuation (tweet) {
 	tweet = tweet.map(word => {
 		// Replace any characters within the regexp '[]' with an empty string
-		word = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+		word = word.replace(/[….,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
 
 		// Replace any substring of 2+ consecutive spaces with only 1 space
 		word = word.replace(/\s{2,}/," ") 

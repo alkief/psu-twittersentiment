@@ -15,6 +15,8 @@ import Controller from './scripts/Controller'
 import TwitterMessenger from "./scripts/TwitterMessenger";
 import WatsonMessenger from "./scripts/WatsonMessenger"; // The main application controller
 
+import { preprocessTweets } from "./scripts/Parsing"
+
 
 // Instantiate the application controller
 // NOTE test / developmental methods are called in submodule constructors from the 
@@ -45,11 +47,13 @@ app.get('/data/batch', (req, res) => {
 
 app.get('/api/sentiment', (req, res) => {
 	twitter.getTweets(['PSU', 'Penn State', 'Penn State University'], 30).then((tweets) => {
-		tweets = _.map(tweets, 'text')
+		let origTweets = _.map(tweets, 'text')
 
-		tweets = _.uniq(tweets)
+		origTweets = _.uniq(origTweets)
 
-		let tweetText = tweets.join('\n')
+		let procTweets = preprocessTweets(origTweets)
+
+		let tweetText = procTweets.join('\n')
 
 		watson.nluAnalyzeText(tweetText).then((ret) => {
 
@@ -79,7 +83,7 @@ app.get('/api/sentiment', (req, res) => {
 			let result = _.concat(keywords, entities)
 
 			let sentimentPayload = {
-				tweets: tweets,
+				tweets: origTweets,
 				keywords: result
 			}
 
