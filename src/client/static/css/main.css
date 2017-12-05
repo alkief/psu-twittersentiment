@@ -138,3 +138,15 @@ body {
 	color: black !important;
 	background-color: white !important;
 }
+.left-pane td.keyword {
+	width: 50%;
+}
+.left-pane td.info {
+	width: 20%;
+}
+.left-pane td.bar {
+	border: white;
+}
+.left-pane td div {
+	height: 100%;
+}

@@ -121,43 +121,81 @@ export default class View {
 	displayKeywords () {
 		// Append the keywords to the left side of the screen
 		this.sentimentData.keywords.forEach(keyword => {
-			$('.left-pane table').append('<tr><td>' + keyword.text + '</td></tr>')
+			var score;
+			var color;
+			switch(sortBy) {
+				case 0:
+					score = keyword.sentiment;
+					color = "blue";
+					break;
+				case 1:
+					color = "yellow";
+					score = keyword.sadness;
+					break;
+				case 2:
+					color = "orange";
+					score = keyword.joy;
+					break;
+				case 3:
+					color = "green";
+					score = keyword.disgust;
+					break;
+				case 4:
+					color = "red";
+					score = keyword.anger;
+					break;
+				case 5:
+					color = "white";
+					score = keyword.fear;
+					break;
+			}
+			var width;
+			if (score < 0) {
+				width = 60 * -score;
+			}
+			else {
+				width = 60 * score;
+			}
+			$('.left-pane table').append('<tr><td class=\'keyword\'>' + keyword.text + '</td>' +
+			'<td class=\'info\'>' + score + '</td>' + '<td>' +
+			'<div style=background-color:' + color + ';width:' + width + '%><br></div></td>' +
+			 '</tr>')
 		})
+		this.registerKeywordListeners()
 	}
 
 	sortKeywords () {
 		if (!this.sentimentData || !this.sentimentData.keywords) return
 
 		this.clearKeywords()
-		if (sortBy === Const.SORTBY_RELEVANCE) {
+		if (sortBy === Const.SORTBY_SENTIMENT) {
 			this.sentimentData.keywords = this.sentimentData.keywords.sort((a, b) => {
-				return a.sentiment - b.sentiment
+				console.log(a,b);
+				return b.sentiment - a.sentiment
 			})
 		} else if (sortBy === Const.SORTBY_ANGER) {
 			this.sentimentData.keywords = this.sentimentData.keywords.sort((a, b) => {
-				return a.anger - b.anger
+				return b.anger - a.anger
 			})
 		} else if (sortBy === Const.SORTBY_FEAR) {
 			this.sentimentData.keywords = this.sentimentData.keywords.sort((a, b) => {
-				return a.fear - b.fear
+				return b.fear - a.fear
 			})
 		} else if (sortBy === Const.SORTBY_JOY) {
 			this.sentimentData.keywords = this.sentimentData.keywords.sort((a, b) => {
-				return a.joy - b.joy
+				return b.joy - a.joy
 			})
 		} else if (sortBy === Const.SORTBY_SADNESS) {
 			this.sentimentData.keywords = this.sentimentData.keywords.sort((a, b) => {
-				return a.sadness - b.sadness
+				return b.sadness - a.sadness
 			})
 		} else if (sortBy === Const.SORTBY_DISGUST) {
 			this.sentimentData.keywords = this.sentimentData.keywords.sort((a, b) => {
-				return a.disgust - b.disgust
+				return b.disgust - a.disgust
 			})
 		}
 
-		this.sentimentData.keywords.forEach(keyword => {
-			$('.left-pane table').append('<tr><td>' + keyword.text + '</td></tr>')
-		})
+		this.displayKeywords()
 
 		this.registerKeywordListeners()
 	}
