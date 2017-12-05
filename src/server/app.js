@@ -15,7 +15,7 @@ import Controller from './scripts/Controller'
 import TwitterMessenger from "./scripts/TwitterMessenger";
 import WatsonMessenger from "./scripts/WatsonMessenger"; // The main application controller
 
-import { preprocessTweets } from "./scripts/Parsing"
+import { preprocessTweets, removeLinks } from "./scripts/Parsing"
 
 
 // Instantiate the application controller
@@ -39,7 +39,8 @@ app.use('/js', express.static(path.join(__dirname, '../client/js')))
 app.use(bodyParser.json()) // Parse request payloads as JSON
 
 app.get('/api/sentiment', (req, res) => {
-	twitter.getTweets(['PSU', 'Penn State', 'Penn State University'], 30).then((tweets) => {
+	twitter.getTweets(['PSU', 'Penn State', 'Penn State University'], 200).then((tweets) => {
+
 		let origTweets = _.map(tweets, 'text')
 
 		origTweets = _.uniq(origTweets)
@@ -74,6 +75,7 @@ app.get('/api/sentiment', (req, res) => {
 			entities = _.map(entities, transform)
 
 			let result = _.concat(keywords, entities)
+			// origTweets = origTweets.map(tweet => { return removeLinks(tweet).join(' ') })
 
 			let sentimentPayload = {
 				tweets: origTweets,

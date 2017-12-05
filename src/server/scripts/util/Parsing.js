@@ -29,8 +29,6 @@ export function formatTweets (statuses) {
 */
 // TODO consider string version of special characters (eg. '&amp;')
 export function preprocessTweets (tweetList) {
-	//console.log(tweetList)
-
 	// Split into a 2d array corresponding to tweet and word in each tweet
 	let tokenizedTweets = tokenize(tweetList)
 
@@ -43,15 +41,17 @@ export function preprocessTweets (tweetList) {
 		tweet = translateEmojis(tweet)
 		// console.log('tweet after translateEmojis', tweet)
 
-		//tweet = expandAcronyms(tweet)
+		tweet = expandAcronyms(tweet)
 		// console.log('tweet after expandAcronyms', tweet)
 
-		//tweet = removeStopWords(tweet)
+		tweet = removeStopWords(tweet)
 		// console.log('tweet after removeStopWords', tweet)
 
 		tweet = removePunctuation(tweet)
 		// console.log('tweet after removePunctuation', tweet)
 
+		tweet = removeTopicKeywords(tweet)
+		// console.log('tweet after removeTopicKeywords', tweet)
 		return tweet.join(' ')
 	})
 
@@ -71,12 +71,32 @@ export function removeLinks (text) {
 
 	if (Array.isArray(text)) {
 		// Remove any tokens that include 'http' or 'www'
-		text = text.filter(token => { return !token.includes('http') && !token.includes('www') })
+		text = text.filter(token => {
+			let isLink = false
+
+			if (token.includes('http') || token.includes('www') || token.includes('https'))
+				isLink = true
+			else if (token.includes('.com') || token.includes('.net') || token.includes('.edu') || token.includes('t.co'))
+				isLink = true
+
+			return !isLink
+		})
 	} else {
 		throw new TypeError('Parameter of removeLink is not string or array')
 	}
 
 	return text
+}
+
+export function removeTopicKeywords (tweet) {
+	let keywords = ['penn', 'state', 'university', 'psu']
+	tweet = tweet.filter(word => {
+		if (!keywords.includes(word)) {
+			return word
+		}
+	})
+
+	return tweet
 }
 
 /**
@@ -109,7 +129,7 @@ export function translateEmojis (tweet) {
 		// Iterate over the characters in each word
 		for (let i = 0; i < word.length; i++) {
 			// Convert character to hex charcode
-			let charCode = word.codePointAt(i).toString(16) 
+			let charCode = word.codePointAt(i).toString(16)
 			// Find a key/value in the defined emoji list matching the charcode
 			let emojiKeyVal = emojiList.find(element => {
 				if (element.key === charCode) return element
@@ -149,7 +169,7 @@ export function translateEmojis (tweet) {
 	translatedText = translatedText.filter(word => { return word.length >= 1 })
 
 	return translatedText
-}	
+}
 
 
 /**
@@ -212,7 +232,7 @@ export function removePunctuation (tweet) {
 		word = word.replace(/[….,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
 
 		// Replace any substring of 2+ consecutive spaces with only 1 space
-		word = word.replace(/\s{2,}/," ") 
+		word = word.replace(/\s{2,}/," ")
 		return word
 	})
 
