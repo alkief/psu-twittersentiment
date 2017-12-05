@@ -82,26 +82,36 @@ export default class View {
 	// JQuery click handler for keyword selection
 	focusKeyword (event) {
 		let viewObject = event.data
-		let displayTweetList // The list of tweets to display
+		let filterTweetList // The list of tweets to display after filtering by keyword
 
 		if ($(this).hasClass('selected')) {
 			$(this).removeClass('selected')
-			displayTweetList = viewObject.sentimentData.tweets // Display all the tweets we have
+			filterTweetList = viewObject.sentimentData.tweets // Display all the tweets we have
 		} else {
 			$('.left-pane tr').removeClass('selected') // Remove previous selection highlight
 			$(this).addClass('selected') // Highlight the clicked cell
 
-			// Display a list filtered by the clicked keyword
-			displayTweetList = viewObject.sentimentData.tweets.filter(tweet => {
-				tweet.toLowerCase().includes($(this).text())
+			let keywords = $(this)[0].children[0].firstChild.data // The selected keyword text
+
+			keywords = keywords.split(' ') // Split multiple words into array
+
+			// Filter tweets that don't include any of the keyword text
+			filterTweetList = viewObject.sentimentData.tweets.filter(tweet => {
+				let match = false
+
+				let formattedTweet = tweet.split(' ').map(word => { return word.toLowerCase() })
+				keywords.forEach(keyword => {
+					if (tweet.includes(keyword)) match = true
+				})
+
+				return match
 			})
 		}
 
-		viewObject.clearTweets()
-		displayTweetList = new Set(displayTweetList) // Remove duplicates
+		viewObject.clearTweets() // Remove previous list of tweets from display
 
 		// Display the filtered set or remove filter and display all tweets
-		displayTweetList.forEach(tweet => {
+		filterTweetList.forEach(tweet => {
 			$('.right-pane table').append('<tr><td>' + tweet + '</td></tr>')
 		})
 	}
@@ -156,11 +166,14 @@ export default class View {
 			else {
 				width = 60 * score;
 			}
+
+
 			$('.left-pane table').append('<tr><td class=\'keyword\'>' + keyword.text + '</td>' +
 			'<td class=\'info\'>' + score + '</td>' + '<td>' +
 			'<div style=background-color:' + color + ';width:' + width + '%><br></div></td>' +
 			 '</tr>')
 		})
+
 		this.registerKeywordListeners()
 	}
 
@@ -168,9 +181,9 @@ export default class View {
 		if (!this.sentimentData || !this.sentimentData.keywords) return
 
 		this.clearKeywords()
+
 		if (sortBy === Const.SORTBY_SENTIMENT) {
 			this.sentimentData.keywords = this.sentimentData.keywords.sort((a, b) => {
-				console.log(a,b);
 				return b.sentiment - a.sentiment
 			})
 		} else if (sortBy === Const.SORTBY_ANGER) {
@@ -196,8 +209,6 @@ export default class View {
 		}
 
 		this.displayKeywords()
-
-		this.registerKeywordListeners()
 	}
 
 	registerKeywordListeners () {
