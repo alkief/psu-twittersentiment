@@ -100,8 +100,9 @@ export default class View {
 				let match = false
 
 				let formattedTweet = tweet.split(' ').map(word => { return word.toLowerCase() })
+
 				keywords.forEach(keyword => {
-					if (tweet.includes(keyword)) match = true
+					if (formattedTweet.includes(keyword)) match = true
 				})
 
 				return match
